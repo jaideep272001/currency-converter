@@ -1,0 +1,18 @@
+let express = require('express');
+let app = express();
+app.use(express.json());
+
+app.get("/",async(req, res)=>{
+    let {to, from, amount} = req.body;
+    let data = await fetch(`https://v6.exchangerate-api.com/v6/06dde80ea5df9011ad68fc7c/latest/${from}`);
+    let real_data = await data.json();
+    let to_convert = real_data.conversion_rates[to];
+    res.send({
+        status : true, 
+        converted_value : amount * to_convert
+    })
+})
+
+app.listen("8000",()=>{
+    console.log("http://localhost:8000");
+})
